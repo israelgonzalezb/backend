@@ -1,0 +1,23 @@
+{
+  "name": "LifeGPA",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/WEBPT5-LifeGPA-Build-Week/backend.git",
+  "author": "Israel Gonzalez and Will Ediger",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-session-knex": "^1.4.0",
+    "cross-env": "^5.2.1",
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "express-session": "^1.16.2",
+    "helmet": "^3.20.1",
+    "jest": "^24.9.0",
+    "knex": "^0.19.3",
+    "node": "^12.9.1",
+    "nodemon": "^1.19.2",
+    "sqlite3": "^4.1.0",
+    "supertest": "^4.0.2"
+  }
+}
