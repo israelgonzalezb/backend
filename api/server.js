@@ -2,6 +2,8 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 
+const usersRouter = require("./users/users-router.js");
+
 const server = express();
 
 server.use(helmet());
@@ -12,6 +14,8 @@ server.use(cors());
 server.get("/", (req, res) => {
   res.send("Server up and running...");
 });
+
+server.use("/api/users", usersRouter);
 
 server.use(errHandler);
 
