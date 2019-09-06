@@ -3,6 +3,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 
 const usersRouter = require("./users/users-router.js");
+const userCategoriesRouter = require("./user-categories/user-categories-router.js");
 
 const server = express();
 
@@ -16,6 +17,7 @@ server.get("/", (req, res) => {
 });
 
 server.use("/api/users", usersRouter);
+server.use("/api/user_categories", userCategoriesRouter);
 
 server.use(errHandler);
 
