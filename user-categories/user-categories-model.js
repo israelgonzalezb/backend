@@ -5,7 +5,9 @@ module.exports = {
     return db("User_Categories");
   },
   getByUserId: function(user_id) {
-    return db("User_Categories").where("user_id", user_id);
+    return db("User_Categories")
+      .select("id", "category_id", "weight")
+      .where("user_id", user_id);
   },
   getById: function(id) {
     return db("User_Categories")
