@@ -6,6 +6,7 @@ const usersRouter = require("../users/users-router.js");
 const userCategoriesRouter = require("../user-categories/user-categories-router.js");
 
 
+
 const server = express();
 
 server.use(helmet());
@@ -32,7 +33,7 @@ function logger(req, res, next) {
 server.use("/api/users", usersRouter);
 server.use("/api/user_categories", userCategoriesRouter);
 
-server.use(errHandler);
+//server.use(errHandler);
 
 //allows you to pass object of {status: ..., message: ...} to next, and the middleware sends out a json response with that data
 function errHandler(err, req, res, next) {
