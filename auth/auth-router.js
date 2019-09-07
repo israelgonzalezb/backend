@@ -22,13 +22,16 @@ router.post("/register", (req, res) => {
 
 router.post('/login', (req, res, next) => {
     let { username, password } = req.body;
-    req.session.loggedIn = true;
+    
     Users.findBy(username)
       .first()
       .then(user => {
           
         if (user && bcrypt.compareSync(password, user.password)) {
-            
+          req.session.loggedIn = true;
+          // do we need to keep this as the full user object in the session
+          // or should we just keep the username in the session, for safer infosec pattern?
+          req.session.user = user;
           res.status(200).json({message: `Welcome ${user.username}!`});
           next();
   
