@@ -1,3 +1,4 @@
+
 const router = require("express").Router();
 
 const userCategoriesDb = require("../user-categories/user-categories-model.js");
@@ -9,6 +10,7 @@ router.get("/", restricted, (req, res) => {
   console.log("restricted users route working");
   res.send({message: "Restricted router running..."});
 });
+
 
 // - `GET /api/users/:id/categories`: all categories (with weights) that a user has created
 router.get("/:id/categories", validateUserId, async (req, res) => {
