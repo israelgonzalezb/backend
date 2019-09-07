@@ -23,7 +23,7 @@ module.exports = {
   },
   insert: function(user_habit) {
     return db("User_Habits")
-      .insert(user_category)
+      .insert(user_habit)
       .then(([id]) => this.findById(id));
   },
   update: function(updated_user_habit, id) {
