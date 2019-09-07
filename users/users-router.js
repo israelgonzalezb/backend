@@ -11,7 +11,7 @@ const authRouter = require("../auth/auth-router.js");
 // - 'GET api/users/': test authentication route for errors
 router.get("/", restricted, (req, res) => {
   console.log("restricted users route working");
-  //res.send({message: "Restricted router running..."});
+  res.send({message: "Restricted router running..."});
 });
 
 router.use("/",authRouter);

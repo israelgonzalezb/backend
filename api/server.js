@@ -1,11 +1,10 @@
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
+const session = require("express-session");
 
 const usersRouter = require("../users/users-router.js");
 const userCategoriesRouter = require("../user-categories/user-categories-router.js");
-
-
 
 const server = express();
 
@@ -13,7 +12,19 @@ server.use(helmet());
 server.use(express.json());
 server.use(logger);
 server.use(cors());
-
+server.use(
+  session({
+    name: "LifeGPA", // default is connect.sid
+    secret: "this is a secret",
+    cookie: {
+      maxAge: 1 * 24 * 60 * 60 * 1000,
+      secure: false // only set cookies over https. Server will not send back a cookie over http.
+    }, // 1 day in milliseconds
+    httpOnly: true, // don't let JS code access cookies. Browser extensions run JS code on your browser!
+    resave: false,
+    saveUninitialized: false
+  })
+);
 
 server.get("/", (req, res) => {
   res.send("Server up and running...");
@@ -47,4 +58,3 @@ function logger(req, res, next) {
 }
 
 module.exports = server;
-
