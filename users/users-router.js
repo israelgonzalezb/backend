@@ -15,7 +15,6 @@ router.get("/", restricted, (req, res) => {
 });
 
 router.use("/",authRouter);
-//router.use("/login",authRouter.login);
 
 // - `GET /api/users/:id/categories`: all categories (with weights) that a user has created
 router.get("/:id/categories", validateUserId, async (req, res) => {
