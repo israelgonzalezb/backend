@@ -5,7 +5,6 @@ describe("user-habits model", () => {
   describe("add()", () => {
     beforeEach(async () => {
       await db.seed.run();
-      // await db("User_Habits").truncate();
     });
 
     it("should add 2 user habits", async () => {
