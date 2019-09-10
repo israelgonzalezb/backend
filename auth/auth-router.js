@@ -16,7 +16,7 @@ router.post("/register", async (req, res) => {
     next({
       status: 500,
       message: "Unable to register a new user"
-    })
+    });
   }
 });
 
@@ -35,8 +35,7 @@ router.post("/login", async (req, res, next) => {
       next({
         status: 401,
         message: "Invalid credentials"
-      })
-      // res.status(401).json({ message: "Invalid Credentials" });
+      });
     }
   } catch (err) {
     res.status(500).json(err);
