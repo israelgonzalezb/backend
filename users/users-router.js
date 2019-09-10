@@ -2,6 +2,7 @@ const router = require("express").Router();
 
 const userCategoriesDb = require("../user-categories/user-categories-model.js");
 const userHabitsDb = require("../user-habits/user-habits-model.js");
+const habitTrackingDb = require("../habit-tracking/habit-tracking-model.js");
 const Users = require("./users-model.js");
 const restricted = require("../auth/restricted-middleware.js");
 const authRouter = require("../auth/auth-router.js");
@@ -46,6 +47,24 @@ router.get("/:id/habits", restricted, validateUserId, async (req, res) => {
     });
   }
 });
+
+// - `GET /api/users/:id/tracked_habits`: all tracking of habits (with dates done on, and amounts done) that a user has entered
+router.get(
+  "/:id/tracked_habits",
+  restricted,
+  validateUserId,
+  async (req, res) => {
+    const trackedHabitsList = await habitTrackingDb.getByUserId(req.user.id);
+    if (trackedHabitsList) {
+      res.status(200).json(trackedHabitsList);
+    } else {
+      next({
+        status: 500,
+        message: "The habit tracking list could not be retrieved."
+      });
+    }
+  }
+);
 
 async function validateUserId(req, res, next) {
   try {

@@ -5,7 +5,8 @@ const session = require("express-session");
 
 const usersRouter = require("../users/users-router.js");
 const userCategoriesRouter = require("../user-categories/user-categories-router.js");
-
+const userHabitsRouter = require("../user-habits/user-habits-router.js");
+const habitTrackingRouter = require("../habit-tracking/habit-tracking-router.js");
 
 const server = express();
 
@@ -27,8 +28,11 @@ server.use(
     saveUninitialized: false
   })
 );
+
 server.use("/api/users", usersRouter);
 server.use("/api/user_categories", userCategoriesRouter);
+server.use("/api/user_habits", userHabitsRouter);
+server.use("/api/habit_tracking", habitTrackingRouter);
 
 server.get("/", (req, res) => {
   res.send("Server up and running...");
