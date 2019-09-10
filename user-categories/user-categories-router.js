@@ -1,12 +1,10 @@
 const express = require("express");
 const db = require("./user-categories-model.js");
+const restricted = require("../auth/restricted-middleware.js");
 
 const router = express.Router();
 
-// need to add middleware that verifies and includes the user (with user_id).
-// this is necessary for auth validation but also for adding the user_id to objects being added
-
-router.get("/", async (req, res) => {
+router.get("/", restricted, async (req, res) => {
   try {
     const categories = await db.getAll();
     res.json(categories);
@@ -15,13 +13,13 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", validateUserCategoryId, (req, res) => {
+router.get("/:id", restricted, validateUserCategoryId, (req, res) => {
   res.status(200).json(req.userCategory);
 });
 
-router.post("/", validateUserCategory, async (req, res) => {
+router.post("/", restricted, validateUserCategory, async (req, res) => {
   try {
-    const updatedUserCategory = await db.insert(req.userCategory);
+    const updatedUserCategory = await db.insert(req.body);
     res.status(201).json(updatedUserCategory);
   } catch (err) {
     res.status(500).json({ message: "Failed to add new user category" });
@@ -30,11 +28,12 @@ router.post("/", validateUserCategory, async (req, res) => {
 
 router.put(
   "/:id",
+  restricted,
   validateUserCategory,
   validateUserCategoryId,
   async (req, res) => {
     try {
-      const updatedUserCategory = await db.update(req.userCategory, id);
+      const updatedUserCategory = await db.update(req.body, id);
       res.json(updatedUserCategory);
     } catch (err) {
       next({
@@ -45,12 +44,9 @@ router.put(
   }
 );
 
-router.delete("/:id", validateUserCategoryId, async (req, res) => {
-  const { id } = req.params;
-
+router.delete("/:id", restricted, validateUserCategoryId, async (req, res) => {
   try {
-    const deleted = await db.remove(id);
-
+    const deleted = await db.remove(req.userCategory.id);
     if (deleted) {
       res.status(200).json(req.userCategory);
     } else {
@@ -89,9 +85,9 @@ async function validateUserCategoryId(req, res, next) {
 }
 
 function validateUserCategory(req, res, next) {
-  //need to add user_id to req.body from somewhere in the auth middleware process
   if (req.body && Object.keys(req.body).length > 0) {
     if (req.body.category_id && req.body.weight) {
+      req.body.user_id = req.session.user.id;
       next();
     } else {
       next({

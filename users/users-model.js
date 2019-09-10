@@ -8,18 +8,18 @@ module.exports = {
 };
 
 function find() {
-  return db("users").select("id", "username");
+  return db("Users").select("id", "username", "email");
 }
 
 // the destructured object here has given me issues in the past
 // make sure this works!
 function findBy(username) {
-  return db("users").where({ username: username });
+  return db("Users").where({ username: username });
 }
 
 async function add(user) {
   try {
-    const [id] = await db("users").insert(user);
+    const [id] = await db("Users").insert(user);
 
     return findById(id);
   } catch (err) {
@@ -28,7 +28,7 @@ async function add(user) {
 }
 
 function findById(id) {
-  return db("users")
+  return db("Users")
     .where({ id })
     .first();
 }
