@@ -5,16 +5,20 @@ const Users = require("./users-model.js");
 const restricted = require("../auth/restricted-middleware.js");
 const authRouter = require("../auth/auth-router.js");
 
-
-
 // - 'GET api/users/': test authentication route for errors
-router.get("/", restricted, (req, res) => {
-  console.log("restricted users route working");
-  res.send({message: "Restricted router running..."});
+router.get("/", restricted, async (req, res) => {
+  const users = await Users.find();
+  if (users) {
+    res.status(200).json(users);
+  } else {
+    next({
+      status: 500,
+      message: "The user list could not be retrieved."
+    });
+  }
 });
 
-router.use("/",authRouter);
-//router.use("/login",authRouter.login);
+router.use("/", authRouter);
 
 // - `GET /api/users/:id/categories`: all categories (with weights) that a user has created
 router.get("/:id/categories", restricted, validateUserId, async (req, res) => {
