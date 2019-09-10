@@ -1,4 +1,3 @@
-
 const router = require("express").Router();
 
 const userCategoriesDb = require("../user-categories/user-categories-model.js");
@@ -33,11 +32,16 @@ router.get("/:id/categories", validateUserId, async (req, res) => {
 async function validateUserId(req, res, next) {
   try {
     const { id } = req.params;
-    // const user = await db.<getUserMethod>(id);
+    const user = await Users.findById(id);
     if (user) {
+      req.user = user;
+      next();
     } else {
+      next({ status: 404, message: "User ID not found" });
     }
-  } catch {}
+  } catch {
+    next({ status: 500, message: "Error accessing User ID" });
+  }
 }
 
 module.exports = router;
