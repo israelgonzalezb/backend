@@ -1,12 +1,13 @@
 const express = require("express");
 const db = require("./user-categories-model.js");
+const restricted = require("../auth/restricted-middleware.js");
 
 const router = express.Router();
 
 // need to add middleware that verifies and includes the user (with user_id).
 // this is necessary for auth validation but also for adding the user_id to objects being added
 
-router.get("/", async (req, res) => {
+router.get("/", restricted, async (req, res) => {
   try {
     const categories = await db.getAll();
     res.json(categories);
@@ -15,11 +16,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", validateUserCategoryId, (req, res) => {
+router.get("/:id", restricted, validateUserCategoryId, (req, res) => {
   res.status(200).json(req.userCategory);
 });
 
-router.post("/", validateUserCategory, async (req, res) => {
+router.post("/", restricted, validateUserCategory, async (req, res) => {
   try {
     const updatedUserCategory = await db.insert(req.userCategory);
     res.status(201).json(updatedUserCategory);
@@ -30,6 +31,7 @@ router.post("/", validateUserCategory, async (req, res) => {
 
 router.put(
   "/:id",
+  restricted,
   validateUserCategory,
   validateUserCategoryId,
   async (req, res) => {
@@ -45,7 +47,7 @@ router.put(
   }
 );
 
-router.delete("/:id", validateUserCategoryId, async (req, res) => {
+router.delete("/:id", restricted, validateUserCategoryId, async (req, res) => {
   const { id } = req.params;
 
   try {
