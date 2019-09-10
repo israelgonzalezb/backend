@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
 const userCategoriesDb = require("../user-categories/user-categories-model.js");
+const userHabitsDb = require("../user-habits/user-habits-model.js");
 const Users = require("./users-model.js");
 const restricted = require("../auth/restricted-middleware.js");
 const authRouter = require("../auth/auth-router.js");
@@ -29,6 +30,19 @@ router.get("/:id/categories", restricted, validateUserId, async (req, res) => {
     next({
       status: 500,
       message: "The category list could not be retrieved."
+    });
+  }
+});
+
+// - `GET /api/users/:id/habits`: all habits (with weights, daily goal amounts, and category id's) that a user has created
+router.get("/:id/habits", restricted, validateUserId, async (req, res) => {
+  const habitList = await userHabitsDb.getByUserId(req.user.id);
+  if (habitList) {
+    res.status(200).json(habitList);
+  } else {
+    next({
+      status: 500,
+      message: "The habit list could not be retrieved."
     });
   }
 });
