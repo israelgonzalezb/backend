@@ -17,7 +17,7 @@ router.use("/",authRouter);
 //router.use("/login",authRouter.login);
 
 // - `GET /api/users/:id/categories`: all categories (with weights) that a user has created
-router.get("/:id/categories", validateUserId, async (req, res) => {
+router.get("/:id/categories", restricted, validateUserId, async (req, res) => {
   const categoryList = await userCategoriesDb.getByUserId(req.user.id);
   if (categoryList) {
     res.status(200).json(categoryList);
