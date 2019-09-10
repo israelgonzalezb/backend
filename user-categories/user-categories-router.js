@@ -4,9 +4,6 @@ const restricted = require("../auth/restricted-middleware.js");
 
 const router = express.Router();
 
-// need to add middleware that verifies and includes the user (with user_id).
-// this is necessary for auth validation but also for adding the user_id to objects being added
-
 router.get("/", restricted, async (req, res) => {
   try {
     const categories = await db.getAll();
