@@ -31,14 +31,14 @@ describe("user-categories model", () => {
     });
   });
   describe("getById()", () => {
-    it("should return gaffer if id = 1", async () => {
+    it("should return user id 1, category 3, 0.6 weight if id = 5", async () => {
       let userCategory = await userCategoriesModel.getById(5);
       expect(userCategory.user_id).toBe(1);
       expect(userCategory.category_id).toBe(3);
       expect(userCategory.weight).toBe(0.6);
     });
 
-    it("should return sam if id = 2", async () => {
+    it("should return user id 2, category 3, 0.9 weight if id = 6", async () => {
       let userCategory = await userCategoriesModel.getById(6);
       expect(userCategory.user_id).toBe(2);
       expect(userCategory.category_id).toBe(3);
