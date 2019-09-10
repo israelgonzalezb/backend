@@ -6,7 +6,8 @@
   "author": "Israel Gonzalez and Will Ediger",
   "license": "MIT",
   "scripts": {
-    "server": "nodemon"
+    "server": "nodemon",
+    "test": "cross-env DB_ENV=testing jest --watch"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
