@@ -14,7 +14,7 @@ server.use(helmet());
 server.use(express.json());
 server.use(logger);
 server.use(cors());
-server.use(errHandler);
+
 server.use(
   session({
     name: "LifeGPA", // default is connect.sid
@@ -37,6 +37,8 @@ server.use("/api/habit_tracking", habitTrackingRouter);
 server.get("/", (req, res) => {
   res.send("Server up and running...");
 });
+
+server.use(errHandler);
 
 //allows you to pass object of {status: ..., message: ...} to next, and the middleware sends out a json response with that data
 function errHandler(err, req, res, next) {
