@@ -19,7 +19,7 @@ router.get("/:id", restricted, validateUserCategoryId, (req, res) => {
 
 router.post("/", restricted, validateUserCategory, async (req, res) => {
   try {
-    const updatedUserCategory = await db.insert(req.userCategory);
+    const updatedUserCategory = await db.insert(req.body);
     res.status(201).json(updatedUserCategory);
   } catch (err) {
     res.status(500).json({ message: "Failed to add new user category" });
@@ -33,7 +33,7 @@ router.put(
   validateUserCategoryId,
   async (req, res) => {
     try {
-      const updatedUserCategory = await db.update(req.userCategory, id);
+      const updatedUserCategory = await db.update(req.body, id);
       res.json(updatedUserCategory);
     } catch (err) {
       next({
@@ -45,11 +45,8 @@ router.put(
 );
 
 router.delete("/:id", restricted, validateUserCategoryId, async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const deleted = await db.remove(id);
-
+    const deleted = await db.remove(req.userCategory.id);
     if (deleted) {
       res.status(200).json(req.userCategory);
     } else {
