@@ -14,7 +14,7 @@ function find() {
 // the destructured object here has given me issues in the past
 // make sure this works!
 function findBy(username) {
-  return db("users").where({ username });
+  return db("users").where({ username: username });
 }
 
 async function add(user) {

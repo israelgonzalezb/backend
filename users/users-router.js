@@ -4,6 +4,9 @@ const router = require("express").Router();
 const userCategoriesDb = require("../user-categories/user-categories-model.js");
 const Users = require("./users-model.js");
 const restricted = require("../auth/restricted-middleware.js");
+const authRouter = require("../auth/auth-router.js");
+
+
 
 // - 'GET api/users/': test authentication route for errors
 router.get("/", restricted, (req, res) => {
@@ -11,6 +14,8 @@ router.get("/", restricted, (req, res) => {
   res.send({message: "Restricted router running..."});
 });
 
+router.use("/",authRouter);
+//router.use("/login",authRouter.login);
 
 // - `GET /api/users/:id/categories`: all categories (with weights) that a user has created
 router.get("/:id/categories", validateUserId, async (req, res) => {
