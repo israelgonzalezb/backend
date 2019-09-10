@@ -7,7 +7,11 @@
   "license": "MIT",
   "scripts": {
     "server": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "cross-env DB_ENV=testing jest --watch --verbose"
+  },
+  "jest": {
+    "testEnvirnoment": "node"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
