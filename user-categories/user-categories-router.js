@@ -91,9 +91,9 @@ async function validateUserCategoryId(req, res, next) {
 }
 
 function validateUserCategory(req, res, next) {
-  //need to add user_id to req.body from somewhere in the auth middleware process
   if (req.body && Object.keys(req.body).length > 0) {
     if (req.body.category_id && req.body.weight) {
+      req.body.user_id = req.session.user.id;
       next();
     } else {
       next({
