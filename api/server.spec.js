@@ -34,7 +34,7 @@ describe.each`
 */
 
 describe.each`
-  route               |  loggedIn
+  route               |  expected
   ${"categories"}     |  ${[]}
   ${"habits"}         |  ${[]}
   ${"tracked_habits"} |  ${[]}
@@ -46,11 +46,11 @@ describe.each`
     // expect(response.body).toEqual(loggedIn); // Uncomment out once returned object is decided
     expect(response.type).toEqual("application/json");
   });
-  it(`when logged-out, should return ${expected}`, async () => {
+  it(`when logged-out, should return {"message":"You're not allowed in here!"}`, async () => {
     const response = await request(server).get(`/api/users/1/${route}`)
     const restricted = {"message":"You're not allowed in here!"};
     expect(response.status).toEqual(400);
-    expect(response.text).toEqual(restricted); // Uncomment out once returned object is decided
+    expect(response.body).toEqual(restricted);
     expect(response.type).toEqual("application/json");
   });
 });
