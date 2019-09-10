@@ -13,7 +13,7 @@ exports.up = function(knex) {
     .createTable("Categories", tbl => {
       tbl.increments();
       tbl
-        .text("category_name")
+        .text("name")
         .unique()
         .notNullable();
     })
