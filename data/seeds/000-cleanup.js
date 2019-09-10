@@ -9,4 +9,3 @@ exports.seed = async function(knex) {
     console.log(err);
   }
 };
-a;
