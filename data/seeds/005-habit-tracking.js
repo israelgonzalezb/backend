@@ -1,5 +1,5 @@
 exports.seed = function(knex) {
-  return knex("User_Habits").insert([
+  return knex("Habit_Tracking").insert([
     {
       user_habit_id: 1,
       done_on: new Date("January 31 2019 12:30"),
