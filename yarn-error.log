@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/Cellar/node/11.11.0/bin/node /usr/local/Cellar/yarn/1.15.2/libexec/bin/yarn.js add knex-session-connect
+  /usr/local/Cellar/node/11.11.0/bin/node /usr/local/Cellar/yarn/1.15.2/libexec/bin/yarn.js test
 
 PATH: 
   /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Muse:/Applications/Muse
@@ -14,17 +14,12 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/knex-session-connect: Not found
-      at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.15.2/libexec/lib/cli.js:66058:18)
-      at Request.self.callback (/usr/local/Cellar/yarn/1.15.2/libexec/lib/cli.js:129541:22)
-      at Request.emit (events.js:197:13)
-      at Request.<anonymous> (/usr/local/Cellar/yarn/1.15.2/libexec/lib/cli.js:130513:10)
-      at Request.emit (events.js:197:13)
-      at IncomingMessage.<anonymous> (/usr/local/Cellar/yarn/1.15.2/libexec/lib/cli.js:130435:12)
-      at Object.onceWrapper (events.js:285:13)
-      at IncomingMessage.emit (events.js:202:15)
-      at endReadableNT (_stream_readable.js:1132:12)
-      at processTicksAndRejections (internal/process/next_tick.js:76:17)
+  SyntaxError: /Users/israelgonzalez/Documents/lambda/gitFlow/node/backend/package.json: Unexpected token < in JSON at position 259
+      at JSON.parse (<anonymous>)
+      at /usr/local/Cellar/yarn/1.15.2/libexec/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.15.2/libexec/lib/cli.js:304:30)
+      at /usr/local/Cellar/yarn/1.15.2/libexec/lib/cli.js:315:13
 
 npm manifest: 
   {
@@ -35,7 +30,17 @@ npm manifest:
     "author": "Israel Gonzalez and Will Ediger",
     "license": "MIT",
     "scripts": {
-      "server": "nodemon"
+      "server": "nodemon index.js",
+  <<<<<<< HEAD
+      "start": "node index.js",
+      "test": "cross-env DB_ENV=testing jest --watch --verbose"
+    },
+    "jest": {
+      "testEnvirnoment": "node"
+  =======
+      "test": "cross-env DB_ENV=testing jest --watch",
+      "start": "node index.js"
+  >>>>>>> cdcefb8980f479a780c2fdb9c1da3cabe3416f6a
     },
     "dependencies": {
       "bcryptjs": "^2.4.3",
@@ -50,6 +55,7 @@ npm manifest:
       "knex": "^0.19.3",
       "node": "^12.9.1",
       "nodemon": "^1.19.2",
+      "sqlite": "^3.0.3",
       "sqlite3": "^4.1.0",
       "supertest": "^4.0.2"
     }
@@ -4227,7 +4233,12 @@ Lockfile:
     dependencies:
       extend-shallow "^3.0.0"
   
-  sqlite3@^4.1.0:
+  sql-template-strings@^2.2.2:
+    version "2.2.2"
+    resolved "https://registry.yarnpkg.com/sql-template-strings/-/sql-template-strings-2.2.2.tgz#3f11508a25addfce217a3042a9d300c3193b96ff"
+    integrity sha1-PxFQiiWt384hejBCqdMAwxk7lv8=
+  
+  sqlite3@^4.0.0, sqlite3@^4.1.0:
     version "4.1.0"
     resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-4.1.0.tgz#e051fb9c133be15726322a69e2e37ec560368380"
     integrity sha512-RvqoKxq+8pDHsJo7aXxsFR18i+dU2Wp5o12qAJOV5LNcDt+fgJsc2QKKg3sIRfXrN9ZjzY1T7SNe/DFVqAXjaw==
@@ -4235,6 +4246,15 @@ Lockfile:
       nan "^2.12.1"
       node-pre-gyp "^0.11.0"
       request "^2.87.0"
+  
+  sqlite@^3.0.3:
+    version "3.0.3"
+    resolved "https://registry.yarnpkg.com/sqlite/-/sqlite-3.0.3.tgz#3f519cfc599ffa3270d76f3567bf2abb2ac18742"
+    integrity sha512-DpofdtBibbiOObtdADGZYE6bvnLpjRG4ut/MDTDau2nK40htOLj1E0c55aOkvbnRVqQ0ZPtjj7PJuKKyS0Ypww==
+    dependencies:
+      sqlite3 "^4.0.0"
+    optionalDependencies:
+      sql-template-strings "^2.2.2"
   
   sshpk@^1.7.0:
     version "1.16.1"

@@ -5,6 +5,9 @@ exports.seed = function(knex) {
     },
     {
       name: "Wealth"
+    },
+    {
+      name: "Social"
     }
   ]);
 };

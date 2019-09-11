@@ -4,7 +4,8 @@ module.exports = {
   add,
   find,
   findBy,
-  findById
+  findById,
+  del
 };
 
 function find() {
@@ -31,4 +32,12 @@ function findById(id) {
   return db("Users")
     .where({ id })
     .first();
+}
+
+async function del(id) {
+  const user = await findById(id);
+  await db("users")
+    .where("id", "=", id)
+    .del();
+  return user;
 }
