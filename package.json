@@ -11,7 +11,7 @@
     "test": "cross-env DB_ENV=testing jest --watch --verbose"
   },
   "jest": {
-    "testEnvirnoment": "node"
+    "testEnvironment": "node"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
