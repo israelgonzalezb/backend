@@ -34,6 +34,7 @@ server.use("/api/user_categories", userCategoriesRouter);
 server.use("/api/user_habits", userHabitsRouter);
 server.use("/api/habit_tracking", habitTrackingRouter);
 
+// Test passed
 server.get("/", (req, res) => {
   res.send("Server up and running...");
 });
