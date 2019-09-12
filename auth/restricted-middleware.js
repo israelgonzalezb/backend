@@ -10,5 +10,10 @@ module.exports = (req, res, next) => {
   console.log("running auth middleware");
   sesh && sesh.loggedIn === true
     ? next()
-    : res.status(400).json({ message: "You're not allowed in here!" });
+    : res
+        .status(400)
+        .json({
+          message: "You're not allowed in here!",
+          env: process.env.AUTH_ENV
+        });
 };
