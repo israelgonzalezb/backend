@@ -340,7 +340,7 @@ describe.each`
   ${"user_habits"}     | ${expectedUserHabits}     | ${expectedFirstUserHabit}
   ${"habit_tracking"}  | ${expectedHabitTracking}  | ${expectedFirstHabitTracking}
 `(
-  "GET /api/$route and GET /api/$route/1",
+  "GET /api/$route, GET /api/$route/1 and DELETE /api/$route/1",
   ({ route, indexExpected, firstExpected }) => {
     const contextClassRef = ContextHelper;
     beforeAll(async () => {
@@ -355,7 +355,7 @@ describe.each`
       }
     });
     describe("when logged-in", () => {
-      it(`should return ${indexExpected}`, async () => {
+      it(`GET /api/${route} should return ${indexExpected}`, async () => {
         //console.log(`**** ${contextClassRef.session} ****`);
 
         const response = await request(server)
@@ -366,7 +366,7 @@ describe.each`
         expect(response.body).toEqual(indexExpected);
         expect(response.type).toEqual("application/json");
       });
-      it(`should return ${firstExpected}`, async () => {
+      it(`GET /api/${route}/1 should return ${firstExpected}`, async () => {
         //console.log(`**** ${contextClassRef.session} ****`);
 
         const response = await request(server)
@@ -377,17 +377,35 @@ describe.each`
         expect(response.body).toEqual(firstExpected);
         expect(response.type).toEqual("application/json");
       });
+      it(`DELETE /api/${route}/1 should return ${firstExpected}`, async () => {
+        //console.log(`**** ${contextClassRef.session} ****`);
+
+        const response = await request(server)
+          .delete(`/api/${route}/1`)
+          .set("Cookie", contextClassRef.session);
+        //console.log(response);
+        expect(response.status).toEqual(200);
+        expect(response.body).toEqual(firstExpected);
+        expect(response.type).toEqual("application/json");
+      });
     });
     describe("when logged-out", () => {
-      it(`should return {"message":"You're not allowed in here!"}`, async () => {
+      it(`GET /api/${route} should return {"message":"You're not allowed in here!"}`, async () => {
         const response = await request(server).get(`/api/${route}`);
         const restricted = { message: "You're not allowed in here!" };
         expect(response.status).toEqual(400);
         expect(response.body).toEqual(restricted);
         expect(response.type).toEqual("application/json");
       });
-      it(`should return {"message":"You're not allowed in here!"}`, async () => {
+      it(`GET /api/${route}/1 should return {"message":"You're not allowed in here!"}`, async () => {
         const response = await request(server).get(`/api/${route}/1`);
+        const restricted = { message: "You're not allowed in here!" };
+        expect(response.status).toEqual(400);
+        expect(response.body).toEqual(restricted);
+        expect(response.type).toEqual("application/json");
+      });
+      it(`DELETE /api/${route}/1 should return {"message":"You're not allowed in here!"}`, async () => {
+        const response = await request(server).delete(`/api/${route}/1`);
         const restricted = { message: "You're not allowed in here!" };
         expect(response.status).toEqual(400);
         expect(response.body).toEqual(restricted);
