@@ -310,12 +310,18 @@ const expectedHabitTracking = [
   { done_on: 1548991800000, id: 13, quantity: 1.5, user_habit_id: 10 }
 ];
 
+const expectedFirstUserCategory = {"category_id": 1, "id": 1, "user_id": 1, "weight": 0.3};
+
+const expectedFirstUserHabit = {"category_id": 1, "daily_goal_amount": "100 g", "description": null, "id": 1, "name": "eat broccoli", "user_id": 1, "weight": 0.25};
+
+const expectedFirstHabitTracking = {"done_on": 1548966600000, "id": 1, "quantity": 1, "user_habit_id": 1};
+
 describe.each`
-  route                | expected
-  ${"user_categories"} | ${expectedUserCategories}
-  ${"user_habits"}     | ${expectedUserHabits}
-  ${"habit_tracking"}  | ${expectedHabitTracking}
-`("GET api/$route", ({ route, expected }) => {
+  route                | indexExpected               | firstExpected
+  ${"user_categories"} | ${expectedUserCategories}   | ${expectedFirstUserCategory}
+  ${"user_habits"}     | ${expectedUserHabits}       | ${expectedFirstUserHabit}
+  ${"habit_tracking"}  | ${expectedHabitTracking}    | ${expectedFirstHabitTracking}
+`("GET api/$route and GET api/$route/1", ({ route, indexExpected, firstExpected }) => {
   const contextClassRef = ContextHelper;
   beforeAll(async () => {
     try {
@@ -328,16 +334,29 @@ describe.each`
       console.log(`Error on test login! ${err}`);
     }
   });
-  it(`when logged-in, should return ${expected}`, async () => {
-    console.log(`**** ${contextClassRef.session} ****`);
+  describe("when logged-in", () => {
+    it(`should return ${indexExpected}`, async () => {
+      //console.log(`**** ${contextClassRef.session} ****`);
 
-    const response = await request(server)
-      .get(`/api/${route}`)
-      .set("Cookie", contextClassRef.session);
-    //console.log(response);
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual(expected);
-    expect(response.type).toEqual("application/json");
+      const response = await request(server)
+        .get(`/api/${route}`)
+        .set("Cookie", contextClassRef.session);
+      //console.log(response);
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual(indexExpected);
+      expect(response.type).toEqual("application/json");
+    });
+    it(`should return ${firstExpected}`, async () => {
+      //console.log(`**** ${contextClassRef.session} ****`);
+
+      const response = await request(server)
+        .get(`/api/${route}/1`)
+        .set("Cookie", contextClassRef.session);
+      //console.log(response);
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual(firstExpected);
+      expect(response.type).toEqual("application/json");
+    });
   });
   it(`when logged-out, should return {"message":"You're not allowed in here!"}`, async () => {
     const response = await request(server).get(`/api/${route}`);
