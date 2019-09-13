@@ -9,10 +9,17 @@ const authRouter = require("../auth/auth-router.js");
 
 // - 'GET api/users/': test authentication route for errors
 router.get("/", restricted, async (req, res) => {
-  const users = await Users.find();
-  if (users) {
-    res.status(200).json(users);
-  } else {
+  try {
+    const users = await Users.find();
+    if (users) {
+      res.status(200).json(users);
+    } else {
+      next({
+        status: 200,
+        message: "No users were found."
+      });
+    }
+  } catch {
     next({
       status: 500,
       message: "The user list could not be retrieved."
