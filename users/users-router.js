@@ -19,7 +19,7 @@ router.get("/", restricted, async (req, res) => {
         message: "No users were found."
       });
     }
-  } catch {
+  } catch (err) {
     next({
       status: 500,
       message: "The user list could not be retrieved."
