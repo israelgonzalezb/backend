@@ -23,7 +23,7 @@ function add(user) {
     let result = db("Users")
       .insert(user)
       .then(([id]) => findById(id));
-    console.log(result);
+    console.log("result", result);
     return result;
   } catch (err) {
     console.log(err);
