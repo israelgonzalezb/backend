@@ -22,7 +22,7 @@ async function add(user) {
   try {
     return db("User_Habits")
       .insert(user_habit)
-      .then(([id]) => this.getById(id));
+      .then(([id]) => this.findById(id));
   } catch (err) {
     console.log(err);
   }
