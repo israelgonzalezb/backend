@@ -31,7 +31,7 @@ router.put(
   restricted,
   validateTrackedHabit,
   validateTrackedHabitId,
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const updatedTrackedHabit = await db.update(req.body, id);
       res.json(updatedTrackedHabit);

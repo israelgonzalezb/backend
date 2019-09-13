@@ -9,6 +9,58 @@ const testUser = {
   password: "pass1"
 };
 
+const testRegisterUser = {
+  username: "test3",
+  password: "pass3"
+}
+
+const testRegisterResponse = {
+  id: 3,
+  username: "test3",
+  password: "$2a$10$7B4kJDtEQGl3h.YA.qn8yOK3b0UKKfsnK8OaeMuZh1DnqEYp6zSfS",
+  email: null
+};
+
+describe("Register with POST /api/users/register", () => {
+  const expected = testRegisterResponse;
+  beforeAll(async () => {
+    try {
+      await db.seed.run();
+    } catch (err) {
+      console.log(`Error on seeding! ${err}`);
+    }
+  });
+  it(`should return ${expected}`, async () => {
+    const response = await request(server)
+      .post(`/api/users/register`)
+      .send(testRegisterUser);
+    expect(response.status).toEqual(201);
+    // just test that we get back the username we used to register
+    // otherwise have to implement a bcrypt compare function here... TODO?
+    expect(response.body.username).toEqual(testRegisterUser.username);
+    expect(response.type).toEqual("application/json");
+  });
+});
+
+describe("Login with POST /api/users/login", () => {
+  const expected = { message: "Welcome test1!" };
+  beforeAll(async () => {
+    try {
+      await db.seed.run();
+    } catch (err) {
+      console.log(`Error on seeding! ${err}`);
+    }
+  });
+  it(`should return ${expected}`, async () => {
+    const response = await request(server)
+      .post(`/api/users/login`)
+      .send(testUser);
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(expected);
+    expect(response.type).toEqual("application/json");
+  });
+});
+
 const expectedCategories = [
   { category_id: 1, id: 1, weight: 0.3 },
   { category_id: 2, id: 2, weight: 0.7 }
@@ -462,10 +514,10 @@ const expectedPostHabitTracking = {
 };
 
 describe.each`
-  route                | dataToSend           | postExpected                   | putExpected
-  ${"user_categories"} | ${postUserCategory}  | ${expectedPostUserCategory}    | ${null}
-  ${"user_habits"}     | ${postUserHabit}     | ${expectedPostUserHabit}       | ${null}
-  ${"habit_tracking"}  | ${postHabitTracking} | ${expectedPostHabitTracking}   | ${null}
+  route                | dataToSend           | postExpected                 | putExpected
+  ${"user_categories"} | ${postUserCategory}  | ${expectedPostUserCategory}  | ${null}
+  ${"user_habits"}     | ${postUserHabit}     | ${expectedPostUserHabit}     | ${null}
+  ${"habit_tracking"}  | ${postHabitTracking} | ${expectedPostHabitTracking} | ${null}
 `("/api/$route", ({ route, dataToSend, postExpected, putExpected }) => {
   const contextClassRef = ContextHelper;
   beforeAll(async () => {
@@ -505,22 +557,25 @@ describe.each`
       expect(response.type).toEqual("application/json");
     });
   });
-  
+
   describe("when logged-out", () => {
     it(`POST should return {"message":"You're not allowed in here!"}`, async () => {
-      const response = await request(server).post(`/api/${route}`).send(dataToSend);
+      const response = await request(server)
+        .post(`/api/${route}`)
+        .send(dataToSend);
       const restricted = { message: "You're not allowed in here!" };
       expect(response.status).toEqual(400);
       expect(response.body).toEqual(restricted);
       expect(response.type).toEqual("application/json");
     });
     it(`PUT should return {"message":"You're not allowed in here!"}`, async () => {
-      const response = await request(server).put(`/api/${route}/1`).send(dataToSend);
+      const response = await request(server)
+        .put(`/api/${route}/1`)
+        .send(dataToSend);
       const restricted = { message: "You're not allowed in here!" };
       expect(response.status).toEqual(400);
       expect(response.body).toEqual(restricted);
       expect(response.type).toEqual("application/json");
     });
   });
-  
 });
