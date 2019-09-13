@@ -20,9 +20,11 @@ function findBy(username) {
 
 function add(user) {
   try {
-    return db("Users")
+    let result = db("Users")
       .insert(user)
-      .then(([id]) => this.findById(id));
+      .then(([id]) => findById(id));
+    console.log(result);
+    return result;
   } catch (err) {
     console.log(err);
   }
