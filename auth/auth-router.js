@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 
 const Users = require("../users/users-model.js");
 
-router.post("/register", async (req, res) => {
+router.post("/register", async (req, res, next) => {
   console.log("on register route");
   let user = req.body;
   const hash = bcrypt.hashSync(user.password, 10);
@@ -25,7 +25,11 @@ router.post("/login", async (req, res, next) => {
   try {
     const user = await Users.findBy(username).first();
     // Our test user's password is not hashed, so if we're in testing environment we'll skip the bcrypt function
-    if (user && (bcrypt.compareSync(password, user.password) || (process.env.DB_ENV === "testing" && password === user.password))) {
+    if (
+      user &&
+      (bcrypt.compareSync(password, user.password) ||
+        (process.env.DB_ENV === "testing" && password === user.password))
+    ) {
       req.session.loggedIn = true;
       // do we need full user object in session?
       // or should we just keep the username in the session, for safer infosec pattern?

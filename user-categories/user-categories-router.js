@@ -4,7 +4,7 @@ const restricted = require("../auth/restricted-middleware.js");
 
 const router = express.Router();
 
-router.get("/", restricted, async (req, res) => {
+router.get("/", restricted, async (req, res, next) => {
   try {
     const categories = await db.getAll();
     res.json(categories);
@@ -13,11 +13,11 @@ router.get("/", restricted, async (req, res) => {
   }
 });
 
-router.get("/:id", restricted, validateUserCategoryId, (req, res) => {
+router.get("/:id", restricted, validateUserCategoryId, (req, res, next) => {
   res.status(200).json(req.userCategory);
 });
 
-router.post("/", restricted, validateUserCategory, async (req, res) => {
+router.post("/", restricted, validateUserCategory, async (req, res, next) => {
   try {
     const updatedUserCategory = await db.insert(req.body);
     res.status(201).json(updatedUserCategory);
@@ -31,7 +31,7 @@ router.put(
   restricted,
   validateUserCategory,
   validateUserCategoryId,
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const updatedUserCategory = await db.update(req.body, id);
       res.json(updatedUserCategory);
@@ -44,24 +44,29 @@ router.put(
   }
 );
 
-router.delete("/:id", restricted, validateUserCategoryId, async (req, res) => {
-  try {
-    const deleted = await db.remove(req.userCategory.id);
-    if (deleted) {
-      res.status(200).json(req.userCategory);
-    } else {
+router.delete(
+  "/:id",
+  restricted,
+  validateUserCategoryId,
+  async (req, res, next) => {
+    try {
+      const deleted = await db.remove(req.userCategory.id);
+      if (deleted) {
+        res.status(200).json(req.userCategory);
+      } else {
+        next({
+          status: 404,
+          message: "The user category with the specified ID does not exist."
+        });
+      }
+    } catch (err) {
       next({
-        status: 404,
-        message: "The user category with the specified ID does not exist."
+        status: 500,
+        message: "Failed to delete user category"
       });
     }
-  } catch (err) {
-    next({
-      status: 500,
-      message: "Failed to delete user category"
-    });
   }
-});
+);
 
 async function validateUserCategoryId(req, res, next) {
   try {

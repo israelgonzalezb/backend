@@ -4,7 +4,7 @@ const restricted = require("../auth/restricted-middleware.js");
 
 const router = express.Router();
 
-router.get("/", restricted, async (req, res) => {
+router.get("/", restricted, async (req, res, next) => {
   try {
     const trackedHabits = await db.getAll();
     res.json(trackedHabits);
@@ -13,11 +13,11 @@ router.get("/", restricted, async (req, res) => {
   }
 });
 
-router.get("/:id", restricted, validateTrackedHabitId, (req, res) => {
+router.get("/:id", restricted, validateTrackedHabitId, (req, res, next) => {
   res.status(200).json(req.trackedHabit);
 });
 
-router.post("/", restricted, validateTrackedHabit, async (req, res) => {
+router.post("/", restricted, validateTrackedHabit, async (req, res, next) => {
   try {
     const updatedTrackedHabit = await db.insert(req.body);
     res.status(201).json(updatedTrackedHabit);
@@ -31,7 +31,7 @@ router.put(
   restricted,
   validateTrackedHabit,
   validateTrackedHabitId,
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const updatedTrackedHabit = await db.update(req.body, id);
       res.json(updatedTrackedHabit);
@@ -44,24 +44,30 @@ router.put(
   }
 );
 
-router.delete("/:id", restricted, validateTrackedHabitId, async (req, res) => {
-  try {
-    const deleted = await db.remove(req.trackedHabit.id);
-    if (deleted) {
-      res.status(200).json(req.trackedHabit);
-    } else {
+router.delete(
+  "/:id",
+  restricted,
+  validateTrackedHabitId,
+  async (req, res, next) => {
+    try {
+      const deleted = await db.remove(req.trackedHabit.id);
+      if (deleted) {
+        res.status(200).json(req.trackedHabit);
+      } else {
+        next({
+          status: 404,
+          message:
+            "The tracked user habit with the specified ID does not exist."
+        });
+      }
+    } catch (err) {
       next({
-        status: 404,
-        message: "The tracked user habit with the specified ID does not exist."
+        status: 500,
+        message: "Failed to delete tracked user habit"
       });
     }
-  } catch (err) {
-    next({
-      status: 500,
-      message: "Failed to delete tracked user habit"
-    });
   }
-});
+);
 
 async function validateTrackedHabitId(req, res, next) {
   try {

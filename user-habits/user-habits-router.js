@@ -4,7 +4,7 @@ const restricted = require("../auth/restricted-middleware.js");
 
 const router = express.Router();
 
-router.get("/", restricted, async (req, res) => {
+router.get("/", restricted, async (req, res, next) => {
   try {
     const habits = await db.getAll();
     res.json(habits);
@@ -13,7 +13,7 @@ router.get("/", restricted, async (req, res) => {
   }
 });
 
-router.get("/:id", restricted, validateUserHabitId, (req, res) => {
+router.get("/:id", restricted, validateUserHabitId, (req, res, next) => {
   res.status(200).json(req.userHabit);
 });
 
@@ -31,7 +31,7 @@ router.put(
   restricted,
   validateUserHabit,
   validateUserHabitId,
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const updatedUserHabit = await db.update(req.body, id);
       res.json(updatedUserHabit);
@@ -44,24 +44,29 @@ router.put(
   }
 );
 
-router.delete("/:id", restricted, validateUserHabitId, async (req, res) => {
-  try {
-    const deleted = await db.remove(req.userHabit.id);
-    if (deleted) {
-      res.status(200).json(req.userHabit);
-    } else {
+router.delete(
+  "/:id",
+  restricted,
+  validateUserHabitId,
+  async (req, res, next) => {
+    try {
+      const deleted = await db.remove(req.userHabit.id);
+      if (deleted) {
+        res.status(200).json(req.userHabit);
+      } else {
+        next({
+          status: 404,
+          message: "The user habit with the specified ID does not exist."
+        });
+      }
+    } catch (err) {
       next({
-        status: 404,
-        message: "The user habit with the specified ID does not exist."
+        status: 500,
+        message: "Failed to delete user habit"
       });
     }
-  } catch (err) {
-    next({
-      status: 500,
-      message: "Failed to delete user habit"
-    });
   }
-});
+);
 
 async function validateUserHabitId(req, res, next) {
   try {

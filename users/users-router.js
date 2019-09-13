@@ -8,7 +8,7 @@ const restricted = require("../auth/restricted-middleware.js");
 const authRouter = require("../auth/auth-router.js");
 
 // - 'GET api/users/': test authentication route for errors
-router.get("/", restricted, async (req, res) => {
+router.get("/", restricted, async (req, res, next) => {
   console.log("got to /api/users");
   try {
     const users = await Users.find();
@@ -31,37 +31,47 @@ router.get("/", restricted, async (req, res) => {
 router.use("/", authRouter);
 
 // - `GET /api/users/:id/categories`: all categories (with weights) that a user has created
-router.get("/:id/categories", restricted, validateUserId, async (req, res) => {
-  const categoryList = await userCategoriesDb.getByUserId(req.user.id);
-  if (categoryList) {
-    res.status(200).json(categoryList);
-  } else {
-    next({
-      status: 500,
-      message: "The category list could not be retrieved."
-    });
+router.get(
+  "/:id/categories",
+  restricted,
+  validateUserId,
+  async (req, res, next) => {
+    const categoryList = await userCategoriesDb.getByUserId(req.user.id);
+    if (categoryList) {
+      res.status(200).json(categoryList);
+    } else {
+      next({
+        status: 500,
+        message: "The category list could not be retrieved."
+      });
+    }
   }
-});
+);
 
 // - `GET /api/users/:id/habits`: all habits (with weights, daily goal amounts, and category id's) that a user has created
-router.get("/:id/habits", restricted, validateUserId, async (req, res) => {
-  const habitList = await userHabitsDb.getByUserId(req.user.id);
-  if (habitList) {
-    res.status(200).json(habitList);
-  } else {
-    next({
-      status: 500,
-      message: "The habit list could not be retrieved."
-    });
+router.get(
+  "/:id/habits",
+  restricted,
+  validateUserId,
+  async (req, res, next) => {
+    const habitList = await userHabitsDb.getByUserId(req.user.id);
+    if (habitList) {
+      res.status(200).json(habitList);
+    } else {
+      next({
+        status: 500,
+        message: "The habit list could not be retrieved."
+      });
+    }
   }
-});
+);
 
 // - `GET /api/users/:id/tracked_habits`: all tracking of habits (with dates done on, and amounts done) that a user has entered
 router.get(
   "/:id/tracked_habits",
   restricted,
   validateUserId,
-  async (req, res) => {
+  async (req, res, next) => {
     const trackedHabitsList = await habitTrackingDb.getByUserId(req.user.id);
     if (trackedHabitsList) {
       res.status(200).json(trackedHabitsList);
