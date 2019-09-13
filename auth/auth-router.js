@@ -13,10 +13,10 @@ router.post("/register", async (req, res, next) => {
     const newUser = await Users.add(user);
     console.log("newUser", newUser);
     res.status(201).json(newUser);
-  } catch {
+  } catch (err) {
     next({
       status: 500,
-      message: "Unable to register a new user"
+      message: err
     });
   }
 });
