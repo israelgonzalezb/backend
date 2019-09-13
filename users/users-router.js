@@ -9,6 +9,7 @@ const authRouter = require("../auth/auth-router.js");
 
 // - 'GET api/users/': test authentication route for errors
 router.get("/", restricted, async (req, res) => {
+  console.log("got to /api/users");
   try {
     const users = await Users.find();
     if (users) {
