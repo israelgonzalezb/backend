@@ -1,10 +1,7 @@
 exports.up = function(knex) {
   return knex.schema
     .createTable("Users", tbl => {
-      tbl
-        .increments()
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+      tbl.increments();
       tbl
         .text("username")
         .unique()
@@ -14,10 +11,7 @@ exports.up = function(knex) {
     })
 
     .createTable("Categories", tbl => {
-      tbl
-        .increments()
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+      tbl.increments();
       tbl
         .text("name")
         .unique()
@@ -31,33 +25,38 @@ exports.up = function(knex) {
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("Users");
+        .inTable("Users")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
       tbl
         .integer("category_id")
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("Categories");
+        .inTable("Categories")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
       tbl.double("weight");
     })
 
     .createTable("User_Habits", tbl => {
-      tbl
-        .increments()
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+      tbl.increments();
       tbl
         .integer("user_id")
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("Users");
+        .inTable("Users")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
       tbl
         .integer("category_id")
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("Categories");
+        .inTable("Categories")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
       tbl.text("name").notNullable();
       tbl.text("description");
       tbl.text("daily_goal_amount").notNullable();
@@ -71,7 +70,9 @@ exports.up = function(knex) {
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("User_Habits");
+        .inTable("User_Habits")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
       tbl.timestamp("done_on").notNullable();
       tbl.double("quantity").notNullable();
     });
