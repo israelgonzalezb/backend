@@ -29,16 +29,19 @@ router.post("/", restricted, validateUserCategory, async (req, res) => {
 router.put(
   "/:id",
   restricted,
-  validateUserCategory,
   validateUserCategoryId,
+  validateUserCategory,
   async (req, res, next) => {
+    //console.log(`!!!!@@@@@@ ${JSON.stringify(req.body)}`);
     try {
-      const updatedUserCategory = await db.update(req.body, id);
+      const updatedUserCategory = await db.update(req.body, req.params.id);
+      console.log(`update responses is: ${updatedUserCategory}`);
       res.json(updatedUserCategory);
+      next();
     } catch (err) {
       next({
         status: 500,
-        message: "Failed to update user category"
+        message: `Failed to update user category ${err}`
       });
     }
   }
@@ -64,9 +67,13 @@ router.delete("/:id", restricted, validateUserCategoryId, async (req, res) => {
 });
 
 async function validateUserCategoryId(req, res, next) {
+  
   try {
+    
     const { id } = req.params;
+    
     const userCategory = await db.getById(id);
+    console.log(`vlaidator function response: ${userCategory} `);
     if (userCategory) {
       req.userCategory = userCategory;
       next();
@@ -88,6 +95,7 @@ function validateUserCategory(req, res, next) {
   if (req.body && Object.keys(req.body).length > 0) {
     if (req.body.category_id && req.body.weight) {
       req.body.user_id = req.session.user.id;
+      console.log("validateUserCategory");
       next();
     } else {
       next({
