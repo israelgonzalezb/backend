@@ -18,7 +18,7 @@ function findBy(username) {
   return db("Users").where({ username: username });
 }
 
-async function add(user) {
+function add(user) {
   try {
     return db("User_Habits")
       .insert(user_habit)
@@ -30,7 +30,7 @@ async function add(user) {
 
 function findById(id) {
   return db("Users")
-    .where({ id })
+    .where("id", id)
     .first();
 }
 
