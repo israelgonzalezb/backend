@@ -14,7 +14,7 @@ router.post("/register", async (req, res, next) => {
     console.log("newUser", newUser);
     res.status(201).json(newUser);
   } catch (err) {
-    console.log(error);
+    console.log(err);
     next({
       status: 500,
       message: "failed to add user to database"
