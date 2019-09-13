@@ -31,7 +31,7 @@ router.put(
   restricted,
   validateUserCategory,
   validateUserCategoryId,
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const updatedUserCategory = await db.update(req.body, id);
       res.json(updatedUserCategory);
