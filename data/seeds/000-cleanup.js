@@ -1,8 +1,10 @@
 exports.seed = async function(knex) {
   try {
-    await knex.schema.raw(
-      "TRUNCATE TABLE Habit_Tracking, User_Habits, User_Categories, Users, Categories CASCADE"
-    );
+    await knex.truncate("Habit_Tracking");
+    await knex.truncate("User_Habits");
+    await knex.truncate("User_Categories");
+    await knex.truncate("Users");
+    await knex.truncate("Categories");
   } catch (err) {
     console.log(err);
   }
