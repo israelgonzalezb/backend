@@ -20,9 +20,9 @@ function findBy(username) {
 
 async function add(user) {
   try {
-    const [id] = await db("Users").insert(user);
-
-    return findById(id);
+    return db("User_Habits")
+      .insert(user_habit)
+      .then(([id]) => this.getById(id));
   } catch (err) {
     console.log(err);
   }
