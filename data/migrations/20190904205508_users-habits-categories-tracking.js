@@ -1,7 +1,10 @@
 exports.up = function(knex) {
   return knex.schema
     .createTable("Users", tbl => {
-      tbl.increments();
+      tbl
+        .increments()
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
       tbl
         .text("username")
         .unique()
@@ -11,7 +14,10 @@ exports.up = function(knex) {
     })
 
     .createTable("Categories", tbl => {
-      tbl.increments();
+      tbl
+        .increments()
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
       tbl
         .text("name")
         .unique()
@@ -25,38 +31,33 @@ exports.up = function(knex) {
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("Users")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .inTable("Users");
       tbl
         .integer("category_id")
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("Categories")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .inTable("Categories");
       tbl.double("weight");
     })
 
     .createTable("User_Habits", tbl => {
-      tbl.increments();
+      tbl
+        .increments()
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
       tbl
         .integer("user_id")
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("Users")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .inTable("Users");
       tbl
         .integer("category_id")
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("Categories")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .inTable("Categories");
       tbl.text("name").notNullable();
       tbl.text("description");
       tbl.text("daily_goal_amount").notNullable();
@@ -70,9 +71,7 @@ exports.up = function(knex) {
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("User_Habits")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .inTable("User_Habits");
       tbl.timestamp("done_on").notNullable();
       tbl.double("quantity").notNullable();
     });
