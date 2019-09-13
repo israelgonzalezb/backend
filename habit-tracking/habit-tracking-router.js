@@ -33,7 +33,7 @@ router.put(
   validateTrackedHabitId,
   async (req, res, next) => {
     try {
-      const updatedTrackedHabit = await db.update(req.body, id);
+      const updatedTrackedHabit = await db.update(req.body, req.params.id);
       res.json(updatedTrackedHabit);
     } catch (err) {
       next({

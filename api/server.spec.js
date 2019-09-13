@@ -12,7 +12,7 @@ const testUser = {
 const testRegisterUser = {
   username: "test3",
   password: "pass3"
-}
+};
 
 const testRegisterResponse = {
   id: 3,
@@ -482,6 +482,12 @@ const expectedPostUserCategory = {
   weight: 0.6
 };
 
+const expectedPutUserCategory = {
+  user_id: 1,
+  category_id: 1,
+  weight: 0.7
+};
+
 const postUserHabit = {
   user_id: 1,
   category_id: 1,
@@ -500,6 +506,16 @@ const expectedPostUserHabit = {
   weight: 0.6
 };
 
+const expectedPutUserHabit = {
+  category_id: 1,
+  daily_goal_amount: "2",
+  description: null,
+  id: 1,
+  name: "habit added yo",
+  user_id: 1,
+  weight: 0.6
+};
+
 const postHabitTracking = {
   user_habit_id: 5,
   done_on: new Date("February 28 2019 12:30"),
@@ -513,11 +529,18 @@ const expectedPostHabitTracking = {
   user_habit_id: 5
 };
 
+const expectedPutHabitTracking = {
+  done_on: "2019-02-28T20:30:00.000Z",
+  id: 1,
+  quantity: 4,
+  user_habit_id: 5
+};
+
 describe.each`
   route                | dataToSend           | postExpected                 | putExpected
-  ${"user_categories"} | ${postUserCategory}  | ${expectedPostUserCategory}  | ${null}
-  ${"user_habits"}     | ${postUserHabit}     | ${expectedPostUserHabit}     | ${null}
-  ${"habit_tracking"}  | ${postHabitTracking} | ${expectedPostHabitTracking} | ${null}
+  ${"user_categories"} | ${postUserCategory}  | ${expectedPostUserCategory}  | ${expectedPutUserCategory}
+  ${"user_habits"}     | ${postUserHabit}     | ${expectedPostUserHabit}     | ${expectedPutUserHabit}
+  ${"habit_tracking"}  | ${postHabitTracking} | ${expectedPostHabitTracking} | ${expectedPutHabitTracking}
 `("/api/$route", ({ route, dataToSend, postExpected, putExpected }) => {
   const contextClassRef = ContextHelper;
   beforeAll(async () => {
@@ -546,12 +569,11 @@ describe.each`
     });
     it(`PUT should return ${putExpected}`, async () => {
       //console.log(`**** ${contextClassRef.session} ****`);
-
       const response = await request(server)
         .put(`/api/${route}/1`)
         .send(dataToSend)
         .set("Cookie", contextClassRef.session);
-      //console.log(response);
+      //console.log(`****~~~ ${JSON.stringify(response)}`);
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(putExpected);
       expect(response.type).toEqual("application/json");
