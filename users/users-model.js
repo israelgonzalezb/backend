@@ -20,8 +20,8 @@ function findBy(username) {
 
 function add(user) {
   try {
-    return db("User_Habits")
-      .insert(user_habit)
+    return db("Users")
+      .insert(user)
       .then(([id]) => this.findById(id));
   } catch (err) {
     console.log(err);
