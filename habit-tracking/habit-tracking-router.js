@@ -22,6 +22,7 @@ router.post("/", restricted, validateTrackedHabit, async (req, res, next) => {
     const updatedTrackedHabit = await db.insert(req.body);
     res.status(201).json(updatedTrackedHabit);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Failed to add tracking of user habit" });
   }
 });
